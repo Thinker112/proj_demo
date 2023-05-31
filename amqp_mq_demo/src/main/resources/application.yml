@@ -1,0 +1,29 @@
+server:
+  port: 8081
+spring:
+  jmx:
+    enabled: true
+  rabbitmq:
+    #username: admin
+    #password: 1qaz!QAZ
+    host: 127.0.0.1
+    port: 5672
+    listener:
+      # SimpleMessageListenerContainer是最基本的监听容器之一，它是一个线程池，通过轮询的方式将消息分发给不同的消费者，每个消费者独立地处理自己所接收到的消息。
+      # 它适用于并发消费者较少、消息量较少的场景。
+      simple:
+        #每个消息消费者从队列中预取一定数量的消息并将它们存储在缓存中，以便后续快速消费
+        prefetch: 300
+        acknowledge-mode: manual #消息签收模式
+      # DirectMessageListenerContainer是在SimpleMessageListenerContainer的基础上，增加了使用RabbitMQ的推送机制将消息推送给消费者，而不是通过轮询的方式将消息分发给消费者。
+      # 这种方式可以更加高效地处理消息，特别是在高并发、大量消息的场景下。需要注意的是，为了使用RabbitMQ的推送机制，需要将RabbitMQ的客户端配置参数prefetchCount设置为1，避免出现某个消费者快速处理完任务，但是其他消费者的任务仍在等待的情况。
+      direct:
+        prefetch: 1
+    publisher-confirm-type: correlated #发布消息到交换机确认
+    publisher-returns: true
+    template:
+      mandatory: true
+logging:
+  file:
+    name: AMQP.log
+    path: /var/log
