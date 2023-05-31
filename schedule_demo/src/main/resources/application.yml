@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: SpringBootApplication
+  jmx:
+    enabled: true
+  task:
+    scheduling:
+      pool:
+        size: 2
+server:
+  port: 8087
