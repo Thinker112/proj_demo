@@ -18,7 +18,11 @@ public class PlatformAspect {
     public void methodPointcut() {}
 
     @AfterReturning(value = "methodPointcut()", returning = "result")
-    void process(JoinPoint joinPoint, Object result){
+    void process(JoinPoint joinPoint, Boolean result){
+        if (!result){
+            log.info("result is false -> {}" ,result);
+            return;
+        }
         Object[] args = joinPoint.getArgs();
         String str = (String) args[0];
         log.info("param -> {}", str);

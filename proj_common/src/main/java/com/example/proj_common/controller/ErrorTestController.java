@@ -17,7 +17,7 @@ public class ErrorTestController {
 
     @GetMapping("/StringTest")
     public Boolean stringTest(String str){
-        return true;
+        return false;
     }
 
 
