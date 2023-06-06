@@ -1,6 +1,6 @@
-package com.example.proj_common.conf;
+package com.example.proj_common.restTemplate.conf;
 
-import com.example.proj_common.interceptor.CustomClientHttpRequestInterceptor;
+import com.example.proj_common.restTemplate.interceptor.CustomClientHttpRequestInterceptor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

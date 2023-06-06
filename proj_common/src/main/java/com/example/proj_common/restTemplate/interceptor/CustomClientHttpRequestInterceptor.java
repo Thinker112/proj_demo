@@ -1,4 +1,4 @@
-package com.example.proj_common.interceptor;
+package com.example.proj_common.restTemplate.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
