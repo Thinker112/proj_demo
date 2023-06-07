@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * JWT工具类
+ * JWT工具类, 用于生成Token
  */
 public class JwtUtil {
 

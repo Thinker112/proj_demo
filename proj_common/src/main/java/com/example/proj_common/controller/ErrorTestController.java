@@ -39,13 +39,12 @@ public class ErrorTestController {
     @GetMapping("/createUser")
     public User createUser(){
         User user = new User();
-        user.setUserName("yyb2");
-        user.setPassword("abc1234");
+        user.setUserName("yyb3");
+        user.setPassword("abc12345");
         user.setNickName("eric");
         user.setUserType("1");
         user.setDelFlag(0);
-        User save = userRepository.save(user);
-        return save;
+        return userRepository.save(user);
     }
 
 

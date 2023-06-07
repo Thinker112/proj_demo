@@ -1,6 +1,6 @@
 package com.example.proj_common.exception;
 
-import com.example.proj_common.Enum.ResponseCodeEnum;
+import com.example.proj_common.enums.ResponseCodeEnum;
 import lombok.Getter;
 
 @Getter

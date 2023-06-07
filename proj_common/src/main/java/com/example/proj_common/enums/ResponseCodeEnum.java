@@ -1,4 +1,4 @@
-package com.example.proj_common.Enum;
+package com.example.proj_common.enums;
 
 import lombok.Getter;
 
