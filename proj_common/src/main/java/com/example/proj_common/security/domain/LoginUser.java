@@ -1,6 +1,8 @@
 package com.example.proj_common.security.domain;
 
 
+import com.alibaba.fastjson2.annotation.JSONField;
+import com.example.proj_common.security.entity.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,11 +25,19 @@ public class LoginUser implements UserDetails {
         this.user = user;
         this.permissions = permissions;
     }
-//    @JSONField(serialize = false)
+    @JSONField(serialize = false)
     private List<SimpleGrantedAuthority> authorities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if(authorities!=null){
+            return authorities;
+        }
+        //把permissions中字符串类型的权限信息转换成GrantedAuthority对象存入authorities中
+        authorities = permissions.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+        return authorities;
     }
 
     @Override

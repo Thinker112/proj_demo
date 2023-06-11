@@ -1,4 +1,4 @@
-package com.example.proj_common.security.domain;
+package com.example.proj_common.security.entity;
 
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AllArgsConstructor;

@@ -24,7 +24,13 @@ public enum ResponseCodeEnum {
      */
     ERROR_PARAM(10000, "参数错误"),
     EMPTY_PARAM(10001, "参数为空"),
-    ERROR_PARAM_LENGTH(10002, "参数长度错误");
+    ERROR_PARAM_LENGTH(10002, "参数长度错误"),
+
+    ERROR_AUTH(10003, "认证失败"),
+
+    ERROR_PERM(10004, "权限不足"),
+
+    ERROR_NOT_LOGIN(10005, "未登录");
 
     private final Integer code;
     private final String desc;

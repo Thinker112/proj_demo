@@ -2,15 +2,13 @@ package com.example.proj_common.security.controller;
 
 import com.example.proj_common.annotation.CosmoController;
 import com.example.proj_common.security.domain.LoginUser;
-import com.example.proj_common.security.domain.User;
+import com.example.proj_common.security.entity.User;
 import com.example.proj_common.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -49,16 +47,6 @@ public class LoginController {
         resultMap.put("token", jwt);
 
         return resultMap;
-    }
-
-    @DeleteMapping("/user/logout")
-    public String logout(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-
-        redisTemplate.delete("login:" + loginUser.getUser().getId());
-
-        return "操作成功";
     }
 
 }

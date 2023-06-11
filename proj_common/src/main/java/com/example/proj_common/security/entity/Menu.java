@@ -1,11 +1,14 @@
-package com.example.proj_common.security.domain;
+package com.example.proj_common.security.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.querydsl.core.annotations.QueryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -13,9 +16,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Menu implements Serializable {
-    private static final long serialVersionUID = -54979041104113736L;
+@Entity
+@Table(name = "sys_menu")
+@QueryEntity
+public class Menu{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
     * 菜单名
@@ -48,11 +55,11 @@ public class Menu implements Serializable {
     
     private Long createBy;
     
-    private Date createTime;
+    private LocalDateTime createTime;
     
     private Long updateBy;
     
-    private Date updateTime;
+    private LocalDateTime updateTime;
     /**
     * 是否删除（0未删除 1已删除）
     */
