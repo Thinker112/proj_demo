@@ -3,7 +3,6 @@ package com.example.proj_common.security.conf;
 import com.example.proj_common.security.filter.JwtAuthenticationTokenFilter;
 import com.example.proj_common.security.handler.AccessDeniedHandlerImpl;
 import com.example.proj_common.security.handler.AuthenticationEntryPointImpl;
-import com.example.proj_common.security.handler.FailureHandler;
 import com.example.proj_common.security.service.LogoutSuccessHandlerImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
