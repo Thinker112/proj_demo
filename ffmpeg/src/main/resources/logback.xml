@@ -1,0 +1,17 @@
+<configuration>
+    <!-- 定义输出到文件的 appender -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/ffmpeg.log</file> <!-- 定义日志文件的路径和名称 -->
+        <append>true</append> <!-- 如果为 true，日志将追加到现有文件，如果为 false，则每次运行都会重新创建文件 -->
+        <encoder>
+            <!-- 定义日志输出格式 -->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 将日志级别设置为 debug，并将输出目标指定为文件 -->
+    <root level="debug">
+        <appender-ref ref="FILE" />
+<!--        <appender-ref ref="CONSOLE" />-->
+    </root>
+</configuration>

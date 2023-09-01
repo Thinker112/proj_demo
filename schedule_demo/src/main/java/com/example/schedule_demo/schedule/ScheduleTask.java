@@ -14,8 +14,8 @@ public class ScheduleTask {
 
 
     /**
-     * `@Scheduled` 注解默认单线程执行 <br>
-     *  可以通过配置多线程执行,  如果定时任务处理时间过长会阻塞下一个任务的执行，需要加上`@Async` 注解异步执行
+     * <code>@Scheduled</code> 注解默认单线程执行 <br>
+     *  可以通过配置多线程执行,  如果定时任务处理时间过长会阻塞下一个任务的执行，需要加上<code>@Async</code>注解异步执行
      */
     @SneakyThrows
 //    @Async

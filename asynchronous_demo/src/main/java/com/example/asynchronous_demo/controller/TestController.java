@@ -1,20 +1,14 @@
 package com.example.asynchronous_demo.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDateTime;
+import java.util.concurrent.*;
 
 @RestController
 @Slf4j
@@ -40,5 +34,31 @@ public class TestController {
             }
         });
         return deferredResult;
+    }
+
+    public static void main(String[] args) {
+
+        ScheduledExecutorService executorService =
+                Executors.newScheduledThreadPool(1);
+
+        int i = 0;
+
+        while (true){
+
+            i++;
+            if (i == 1000){
+                break;
+            }
+
+            final int[] i2 = { i };
+
+            executorService.schedule(() -> {
+                String name = Thread.currentThread().getName();
+                System.out.println( name + "_ i = " +  i2[0]);
+            }, 1000L * i, TimeUnit.MILLISECONDS);
+
+        }
+
+        System.out.println("主线程执行。。。");
     }
 }
