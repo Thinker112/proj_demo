@@ -18,7 +18,6 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "sys_user")
 @Entity
 @QueryEntity
