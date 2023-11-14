@@ -8,6 +8,7 @@
     <artifactId>myself_demo_all</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <modules>
         <module>ffmpeg</module>
     </modules>

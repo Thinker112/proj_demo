@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,8 +19,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(BizException.class)
-    public Result<ResponseCodeEnum> handleBizException(BizException bizException) {
-        log.error("业务异常:{}", bizException.getMessage(), bizException);
+    public Result<ResponseCodeEnum> handleBizException(BizException bizException, HttpServletRequest servletRequest) {
+        String requestURI = servletRequest.getRequestURI();
+        log.error("请求路径: {}, 业务异常:{}", requestURI, bizException.getMessage());
         return Result.error(bizException.getError());
     }
 
@@ -29,8 +32,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(RuntimeException.class)
-    public Result<ResponseCodeEnum> handleRunTimeException(RuntimeException e) {
-        log.error("运行时异常: {}", e.getMessage(), e);
+    public Result<ResponseCodeEnum> handleRunTimeException(RuntimeException e, HttpServletRequest servletRequest) {
+        String requestURI = servletRequest.getRequestURI();
+        log.error("请求路径: {}, 运行时异常: {}", requestURI, e.getMessage(), e);
         return Result.error(ResponseCodeEnum.ERROR);
     }
 }
