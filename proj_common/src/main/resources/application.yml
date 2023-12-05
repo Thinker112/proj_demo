@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  application:
+    name: proj_common
   datasource:
     url: jdbc:mysql://192.168.169.193:3306/proj_common?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
@@ -19,7 +21,3 @@ management:
       endpoint:
         metrics:
           enabled: true
-
-logging:
-  file:
-    name: proj_common.log
