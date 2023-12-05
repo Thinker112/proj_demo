@@ -20,9 +20,9 @@ public class ErrorTestController {
     private final UserRepository userRepository;
 
     @GetMapping("/error/test")
-    public String errorTest(){
-
-        int i = 1/0;
+    public String errorTest(Integer integer){
+        System.out.println("integer = " + integer);
+//        int i = 1/0;
 
         return "false";
     }

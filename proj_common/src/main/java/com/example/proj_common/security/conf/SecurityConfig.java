@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/login", "/error/test").anonymous()
+                .antMatchers("/user/login", "/error/test", "/actuator/**").anonymous()
                 .anyRequest().authenticated();
 
         //把token校验过滤器添加到过滤器链中

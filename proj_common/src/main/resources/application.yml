@@ -1,4 +1,3 @@
-
 server:
   port: 8080
 spring:
@@ -11,6 +10,16 @@ spring:
     host: 192.168.169.193
     password: Admin_1qaz!QAZ
     port: 6380
+    database: 0 #Best Practices: Specify DB index manually
+management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        metrics:
+          enabled: true
+
 logging:
   file:
     name: proj_common.log
