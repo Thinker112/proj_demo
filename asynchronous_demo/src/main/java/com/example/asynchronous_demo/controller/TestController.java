@@ -3,6 +3,8 @@ package com.example.asynchronous_demo.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,7 @@ import java.util.concurrent.*;
 @Slf4j
 @RequiredArgsConstructor
 @CrossOrigin
+@EnableScheduling
 public class TestController {
 
     private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
@@ -51,39 +54,20 @@ public class TestController {
         return emitter;
     }
 
+    @Scheduled(fixedRate = 2000) // 每2秒生成一条日志消息
+    public void generateLogMessage() {
+        String logMessage = "This is a log message at " + System.currentTimeMillis();
+        this.sendLogMessage(logMessage);
+    }
+
     public void sendLogMessage(String message) {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(SseEmitter.event().data(message));
             } catch (IOException e) {
+                log.error(e.getMessage());
                 emitters.remove(emitter);
             }
         }
     }
-
-//    public static void main(String[] args) {
-//
-//        ScheduledExecutorService executorService =
-//                Executors.newScheduledThreadPool(1);
-//
-//        int i = 0;
-//
-//        while (true){
-//
-//            i++;
-//            if (i == 1000){
-//                break;
-//            }
-//
-//            final int[] i2 = { i };
-//
-//            executorService.schedule(() -> {
-//                String name = Thread.currentThread().getName();
-//                System.out.println( name + "_ i = " +  i2[0]);
-//            }, 1000L * i, TimeUnit.MILLISECONDS);
-//
-//        }
-//
-//        System.out.println("主线程执行。。。");
-//    }
 }

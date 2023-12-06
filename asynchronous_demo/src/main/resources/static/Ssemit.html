@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Log Viewer</title>
+</head>
+<body>
+    <h1>Real-time Log Viewer</h1>
+    <div id="log-container"></div>
+
+    <script>
+        var serverIP = "http://localhost:8080"; // 服务器的IP地址或域名
+        var eventSource = new EventSource(serverIP + "/stream");
+
+        var logContainer = document.getElementById('log-container');
+
+        eventSource.onmessage = function(event) {
+            // 处理从服务器接收到的事件数据
+            var logMessage = event.data;
+            var logEntry = document.createElement('p');
+            logEntry.textContent = logMessage;
+            logContainer.appendChild(logEntry);
+        };
+
+        eventSource.onerror = function(event) {
+            // 处理连接错误
+            console.error("EventSource failed: " + event.target.readyState);
+        };
+    </script>
+</body>
+</html>
