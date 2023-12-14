@@ -1,4 +1,4 @@
-package com.example.amqp_mq_demo;
+package com.example.demo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @Slf4j
-public class AmqpMqDemoApplication {
+public class SpringBoot3Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(AmqpMqDemoApplication.class, args);
+        SpringApplication.run(SpringBoot3Application.class, args);
         log.info("start application success");
     }
 

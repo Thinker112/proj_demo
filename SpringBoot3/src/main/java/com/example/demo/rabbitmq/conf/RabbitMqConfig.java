@@ -1,4 +1,4 @@
-package com.example.amqp_mq_demo.conf;
+package com.example.demo.rabbitmq.conf;
 
 
 import org.springframework.amqp.core.Queue;

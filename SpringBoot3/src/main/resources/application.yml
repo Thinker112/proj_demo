@@ -25,5 +25,4 @@ spring:
       mandatory: true
 logging:
   file:
-    name: AMQP.log
-    path: /var/log
+    name: SpringBoot3.log

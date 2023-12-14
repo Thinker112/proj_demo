@@ -1,4 +1,4 @@
-package com.example.amqp_mq_demo.receive;
+package com.example.demo.rabbitmq.receive;
 
 import com.rabbitmq.client.Channel;
 import lombok.SneakyThrows;

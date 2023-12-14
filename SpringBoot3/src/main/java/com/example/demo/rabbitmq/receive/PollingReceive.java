@@ -1,4 +1,4 @@
-package com.example.amqp_mq_demo.receive;
+package com.example.demo.rabbitmq.receive;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
