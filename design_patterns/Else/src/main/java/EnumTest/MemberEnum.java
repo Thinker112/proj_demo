@@ -1,5 +1,7 @@
 package EnumTest;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.util.function.Function;
 
@@ -10,7 +12,9 @@ enum MemberEnum {
     BRONZE_MEMBER(3, "Bronze", originPrice -> originPrice.multiply(new BigDecimal(("0.8"))));
 
     // ---------- 下面才是MemberEnum类的定义 ---------
+    @Getter
     private final Integer type;
+    @Getter
     private final String desc;
     private final Function<BigDecimal, BigDecimal> calculateFinalPrice;
 
@@ -18,14 +22,6 @@ enum MemberEnum {
         this.type = type;
         this.desc = desc;
         this.calculateFinalPrice = calculateFinalPrice;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     public BigDecimal calculateFinalPrice(BigDecimal originPrice){
