@@ -8,4 +8,4 @@
 | $$  | $$| $$    \$$$    \$$     \| $$| $$ \$$    $$| $$  | $$         | $$
  \$$   \$$ \$$     \$      \$$$$$$$ \$$ \$$  \$$$$$$  \$$   \$$          \$$
 
-Spring Boot Version: ${spring-boot.version}
+SpringBoot Version: ${spring-boot.version}

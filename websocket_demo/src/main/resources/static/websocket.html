@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Example</title>
+</head>
+<body>
+
+<h1>WebSocket Example</h1>
+
+<script>
+    // 创建WebSocket对象，并指定连接的地址
+    const socket = new WebSocket('wss://10.120.5.11:8191/ws/notice');
+
+    // 当连接建立时触发
+    socket.addEventListener('open', (event) => {
+        console.log('WebSocket连接已建立:', event);
+        // 在这里可以添加一些初始化的操作
+    });
+
+    // 当收到服务器发送的消息时触发
+    socket.addEventListener('message', (event) => {
+        console.log('收到服务器消息:', event.data);
+        // 在这里可以处理接收到的消息
+    });
+
+    // 当连接关闭时触发
+    socket.addEventListener('close', (event) => {
+        console.log('WebSocket连接已关闭:', event);
+        // 在这里可以添加一些关闭连接后的清理操作
+    });
+
+    // 当发生错误时触发
+    socket.addEventListener('error', (event) => {
+        console.error('WebSocket连接发生错误:', event);
+        // 在这里可以处理连接错误
+    });
+
+    // 在页面关闭或离开时关闭WebSocket连接，确保资源被正确释放
+    window.addEventListener('beforeunload', () => {
+        socket.close();
+    });
+
+    // 在需要向服务器发送消息时调用此函数
+    function sendMessage(message) {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(message);
+        } else {
+            console.error('WebSocket连接尚未建立');
+        }
+    }
+
+    // 示例：向服务器发送一条消息
+    const messageToSend = 'Hello, WebSocket!';
+    sendMessage(messageToSend);
+</script>
+
+</body>
+</html>
