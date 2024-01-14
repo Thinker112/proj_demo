@@ -78,7 +78,8 @@ public class FluxDemo {
             @Override
             protected void hookOnSubscribe(Subscription subscription) {
                 System.out.println("订阅者和发布者绑定好了：" + subscription);
-                request(1); //背压
+//                request(1); //背压， 请求一个元素
+                requestUnbounded();//请求无限元素
             }
 
             @Override
