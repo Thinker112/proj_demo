@@ -1,14 +1,14 @@
 public class Main {
     public static void main(String[] args) {
 
+        String os = System.getProperty("os.name").toLowerCase();
 
-        int i = 0;
-        try {
-            i = 1 / 0;
-        } catch (Exception e) {
-            System.out.println("e = " + e);
-            return;
+        if (os.contains("win")) {
+            System.out.println("Windows");
+        } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
+            System.out.println("Unix/Linux/Mac");
+        } else {
+            System.out.println("Other");
         }
-        System.out.println("i = " + i);
     }
 }

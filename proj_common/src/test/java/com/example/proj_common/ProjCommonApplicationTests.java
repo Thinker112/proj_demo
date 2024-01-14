@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class ProjCommonApplicationTests {
 
     @Test
-    void contextLoads() {
+    void fastjsonTest() {
 
         Bean bean = new Bean();
         bean.setName("tom");
@@ -16,5 +16,6 @@ class ProjCommonApplicationTests {
         String jsonString = JSONObject.toJSONString(bean);
         System.out.println("jsonString = " + jsonString);
     }
+
 
 }
