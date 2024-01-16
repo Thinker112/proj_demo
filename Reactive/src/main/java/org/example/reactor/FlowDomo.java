@@ -33,7 +33,7 @@ public class FlowDomo {
             public void onNext(String item) {
                 System.out.println(Thread.currentThread() + " item = " + item);
                 subscription.request(1);
-                if ("publish -> 5".equals(item)){
+                if ("publish -> 5".equals(item)) {
                     subscription.cancel();//发送cancel信号, publish -> 5 后面的数据不要了
                 }
             }
@@ -67,7 +67,7 @@ public class FlowDomo {
     }
 
     //自定义一个中间操作
-    static class MyProcessor extends SubmissionPublisher<String> implements Flow.Processor<String, String>{
+    static class MyProcessor extends SubmissionPublisher<String> implements Flow.Processor<String, String> {
 
         private Flow.Subscription subscription;
 

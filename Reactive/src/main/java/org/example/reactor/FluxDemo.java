@@ -27,26 +27,26 @@ public class FluxDemo {
     /**
      * 信号： 正常/异常（取消）<br>
      * SignalType：<br>
-     *      SUBSCRIBE： 被订阅<br>
-     *      REQUEST：  请求了N个元素<br>
-     *      CANCEL： 流被取消<br>
-     *      ON_SUBSCRIBE：在订阅时候<br>
-     *      ON_NEXT： 在元素到达<br>
-     *      ON_ERROR： 在流错误<br>
-     *      ON_COMPLETE：在流正常完成时<br>
-     *      AFTER_TERMINATE：中断以后<br>
-     *      CURRENT_CONTEXT：当前上下文<br>
-     *      ON_CONTEXT：感知上下文<br>
+     * SUBSCRIBE： 被订阅<br>
+     * REQUEST：  请求了N个元素<br>
+     * CANCEL： 流被取消<br>
+     * ON_SUBSCRIBE：在订阅时候<br>
+     * ON_NEXT： 在元素到达<br>
+     * ON_ERROR： 在流错误<br>
+     * ON_COMPLETE：在流正常完成时<br>
+     * AFTER_TERMINATE：中断以后<br>
+     * CURRENT_CONTEXT：当前上下文<br>
+     * ON_CONTEXT：感知上下文<br>
      * <p>
      * doOnXxx API触发时机<br>
-     *      1、doOnNext：每个数据（流的数据）到达的时候触发<br>
-     *      2、doOnEach：每个元素（流的数据和信号）到达的时候触发<br>
-     *      3、doOnRequest： 消费者请求流元素的时候<br>
-     *      4、doOnError：流发生错误<br>
-     *      5、doOnSubscribe: 流被订阅的时候<br>
-     *      6、doOnTerminate： 发送取消/异常信号中断了流<br>
-     *      7、doOnCancle： 流被取消<br>
-     *      8、doOnDiscard：流中元素被忽略的时候<br>
+     * 1、doOnNext：每个数据（流的数据）到达的时候触发<br>
+     * 2、doOnEach：每个元素（流的数据和信号）到达的时候触发<br>
+     * 3、doOnRequest： 消费者请求流元素的时候<br>
+     * 4、doOnError：流发生错误<br>
+     * 5、doOnSubscribe: 流被订阅的时候<br>
+     * 6、doOnTerminate： 发送取消/异常信号中断了流<br>
+     * 7、doOnCancle： 流被取消<br>
+     * 8、doOnDiscard：流中元素被忽略的时候<br>
      *
      * @param args
      */

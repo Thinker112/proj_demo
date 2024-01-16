@@ -4,16 +4,14 @@ import org.reactivestreams.Subscription;
 import reactor.core.Disposable;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.time.Duration;
 import java.util.List;
 
 /**
- * https://projectreactor.io/docs/core/release/reference/index.html
+ * <a href="https://projectreactor.io/docs/core/release/reference/index.html">projectreactor.io/docs/core/release/reference/index.html</a>
  */
 public class FluxDemo2 {
 
