@@ -3,12 +3,27 @@ package org.example;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FluxCommonAPITest {
+
+    @Test
+    public void parallelFlux() throws IOException {
+        Flux.range(1, 10000)
+                .buffer(100)
+                .parallel(8)
+                .runOn(Schedulers.newParallel("my-thread"))
+                .log()
+                .flatMap(Flux::fromIterable)
+                .subscribe(v -> System.out.println("v = " + v));
+
+        System.in.read();
+    }
 
     @Test
     public void filter() {
@@ -123,5 +138,35 @@ public class FluxCommonAPITest {
                 .map(tuple -> tuple.getT1() + tuple.getT2() + tuple.getT3() + tuple.getT4())
                 .log()
                 .subscribe();
+    }
+
+    @Test
+    public void retryAndTimeout() throws IOException {
+        Flux.just(1)
+                .delayElements(Duration.ofSeconds(3))
+                .log()
+                .timeout(Duration.ofSeconds(1))
+                .retry(2)// 把流重头到尾重新请求一次
+                .onErrorReturn(3)
+                .map(i ->  "haha" + i)
+                .log()
+                .subscribe();
+
+        System.in.read();
+    }
+
+    @Test
+    public void block() {
+        Integer integer = Flux.range(1, 4)
+                .map(i -> i * 2)
+//                .blockFirst();
+                .blockLast();
+        System.out.println("integer = " + integer);
+
+        List<Integer> integer2 = Flux.range(1, 4)
+                .map(i -> i * 2)
+                .collectList()
+                .block();
+        System.out.println("integer2 = " + integer2);
     }
 }
