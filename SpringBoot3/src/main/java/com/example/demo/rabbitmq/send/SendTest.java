@@ -8,9 +8,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class SendTest {
 
     final RabbitTemplate rabbitTemplate;
@@ -38,7 +38,7 @@ public class SendTest {
         log.info("send message -> {}", messages);
     }*/
 
-    @Scheduled(initialDelay = 3 * 1000, fixedDelay = 8 * 1000)
+//    @Scheduled(initialDelay = 3 * 1000, fixedDelay = 8 * 1000)
     public void send(){
         i++;
         String messages = "hello: " + i;
