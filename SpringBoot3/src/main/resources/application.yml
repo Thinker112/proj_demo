@@ -1,6 +1,12 @@
 server:
   port: 8081
 spring:
+  mvc:
+    contentnegotiation:
+      favor-parameter: true # 开启基于请求参数的内容协商功能。 默认参数名：format。 默认此功能不开启
+      # parameter-name: format   # 指定内容协商时使用的参数名。默认是 format
+      media-types:
+        yaml: text/yaml
   rabbitmq:
     #username: admin
     #password: 1qaz!QAZ
