@@ -3,6 +3,11 @@ server:
 spring:
   application:
     name: springboot3-demo
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.169.193:3306/ry-vue?useUnicode=true&characterEncoding=UTF8&rewriteBatchedStatements=true&serverTimezone=PRC&useSSL=false&allowMultiQueries=true
+    username: root
+    password: 1qaz!QAZ
   devtools:
     restart:
       enabled: false # 关闭热部署
@@ -44,3 +49,5 @@ logging:
 #      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
 #      max-file-size: 1MB
 #      max-history: 10
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
