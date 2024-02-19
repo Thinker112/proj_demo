@@ -36,4 +36,11 @@ public class TestElse {
             System.out.println("Other");
         }
     }
+
+    @Test
+    public void test02(){
+        Long num = null;
+        String str = num == 0 ? "ONLINE" : "OFFLINE";
+        System.out.println("str = " + str);
+    }
 }

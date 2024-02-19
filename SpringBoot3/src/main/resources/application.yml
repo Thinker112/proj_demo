@@ -1,6 +1,11 @@
 server:
   port: 8081
 spring:
+  application:
+    name: springboot3-demo
+  devtools:
+    restart:
+      enabled: false # 关闭热部署
   mvc:
     contentnegotiation:
       favor-parameter: true # 开启基于请求参数的内容协商功能。 默认参数名：format。 默认此功能不开启
@@ -33,7 +38,7 @@ logging:
     sql: debug
     web: info #日志分组
   file:
-    name: ./logs/SpringBoot3.log
+    name: ./logs/springboot3-demo.log
 #  logback:
 #    rollingpolicy:
 #      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
