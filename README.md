@@ -1,6 +1,6 @@
 # Common Module
 
-这是一个Java练习项目,包含了作者学习Java时编写的各种Demo示例代码。
+这是一个Java项目通用模块，可设当修改当作项目脚手架
 
 ## 目录
 
@@ -57,4 +57,4 @@ mvn clean install
 
 ## 许可证
 
-本项目使用MIT许可证 - 详情请参阅[LICENSE](LICENSE)文件
+本项目使用MIT许可证 - 详情请参阅LICENSE文件
