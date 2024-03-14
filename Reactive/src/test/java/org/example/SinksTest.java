@@ -41,7 +41,7 @@ public class SinksTest {
     @Test
     public void multicast() throws IOException {
         Sinks.Many<Object> many = Sinks.many()
-                .multicast()  // 单播
+                .multicast()  // 多播
                 .onBackpressureBuffer(); //背压队列
 
         new Thread(() -> {

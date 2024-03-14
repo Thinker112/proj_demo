@@ -19,7 +19,7 @@ public class ScheduleTask {
      */
     @SneakyThrows
 //    @Async
-    @Scheduled(initialDelay = 2000, fixedDelay = 1000)
+//    @Scheduled(initialDelay = 2000, fixedDelay = 1000)
     void timeTask(){
         log.info("......Task Start [{}].....", Thread.currentThread().getName());
         Thread.sleep(2000);
@@ -29,7 +29,7 @@ public class ScheduleTask {
 
 
     //    @Async
-    @Scheduled(initialDelay = 4000, fixedDelay = 3000)
+//    @Scheduled(initialDelay = 4000, fixedDelay = 3000)
     @SneakyThrows
     void timeTask2(){
         log.info("......Task Start2 [{}].....", Thread.currentThread().getName());
