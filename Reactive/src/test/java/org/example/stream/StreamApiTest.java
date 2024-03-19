@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 
 public class StreamApiTest {
 
+    /**
+     * flatMap() 方法接收一个函数作为参数，该函数将流中的每个值都换成另一个流，然后把所有流连接成一个流。
+     */
     @Test
     public void flatMapTest() {
 
@@ -19,11 +22,6 @@ public class StreamApiTest {
 
     @Test
     public void reduceTest(){
-//        int reduce = IntStream.range(1, 10)
-//                .reduce(0, Integer::sum);
-//
-//        System.out.println("reduce = " + reduce);
-
         List<String> strings = Arrays.asList("Hello", "World", "Java", "Stream");
 
         // 使用reduce方法对字符串进行拼接
@@ -31,6 +29,12 @@ public class StreamApiTest {
                 .reduce("", (a, b) -> a + "," + b)
                 .substring(1);
         System.out.println("Result: " + result);
+    }
 
+    @Test
+    public void reduceTest2() {
+        int reduce = IntStream.range(1, 100)
+                .reduce(0, Integer::sum);
+        System.out.println("reduce = " + reduce);
     }
 }
