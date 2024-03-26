@@ -38,12 +38,12 @@ spring:
     template:
       mandatory: true
 ---
-logging:
-  level:
-    sql: debug
-    web: info #日志分组
-  file:
-    name: ./logs/springboot3-demo.log
+#logging:
+#  level:
+#    sql: debug
+#    web: info #日志分组
+#  file:
+#    name: ./logs/springboot3-demo.log
 #  logback:
 #    rollingpolicy:
 #      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz

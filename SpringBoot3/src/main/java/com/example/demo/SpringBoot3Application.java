@@ -28,6 +28,6 @@ public class SpringBoot3Application {
                 .bannerMode(Banner.Mode.OFF)
                 .run(args);
 
-        System.out.println("Application Launched Successfully :)");
+        log.info("##### Application Launched Successfully :) #####");
     }
 }
