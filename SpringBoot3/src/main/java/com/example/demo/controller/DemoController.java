@@ -1,10 +1,15 @@
 package com.example.demo.controller;
 
 import com.example.demo.bean.Person;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
+@Slf4j
 public class DemoController {
 
 
@@ -15,11 +20,13 @@ public class DemoController {
      */
     @GetMapping("/contentNegotiation")
     public Person contentNegotiation() {
+        ThreadContext.put("traceId", UUID.randomUUID().toString());
         Person person = new Person();
         person.setAge(10);
         person.setId(100L);
         person.setEmail("fas@gmial.com");
         person.setUserName("tom");
+        log.info("contentNegotiation");
         return person;
     }
 }
