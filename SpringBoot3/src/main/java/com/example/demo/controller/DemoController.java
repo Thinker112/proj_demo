@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.Log;
 import com.example.demo.bean.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
@@ -19,14 +20,14 @@ public class DemoController {
      * @return
      */
     @GetMapping("/contentNegotiation")
-    public Person contentNegotiation() {
-        ThreadContext.put("traceId", UUID.randomUUID().toString());
+    @Log
+    public Person contentNegotiation(String arg) {
         Person person = new Person();
         person.setAge(10);
         person.setId(100L);
         person.setEmail("fas@gmial.com");
         person.setUserName("tom");
-        log.info("contentNegotiation");
+        log.info(person.toString() + arg);
         return person;
     }
 }
