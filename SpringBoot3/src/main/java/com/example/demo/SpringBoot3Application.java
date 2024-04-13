@@ -27,9 +27,9 @@ public class SpringBoot3Application {
         new SpringApplicationBuilder()
                 .main(SpringBoot3Application.class)
                 .sources(SpringBoot3Application.class)
-                .bannerMode(Banner.Mode.OFF)
+//                .bannerMode(Banner.Mode.OFF)
                 .run(args);
 
-        log.info("##### Application Launched Successfully :) #####");
+        log.info("##### SpringBoot3启动成功 :) #####");
     }
 }
