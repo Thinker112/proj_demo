@@ -1,4 +1,4 @@
-package com.example.websocket_demo.websocket;
+package com.example.websocket_demo.websocket.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,9 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * SIP-WebSocket握手拦截器
+ */
 @Slf4j
 public class SipHandshakeInterceptor implements HandshakeInterceptor {
 

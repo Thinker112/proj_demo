@@ -1,5 +1,6 @@
 package com.example.websocket_demo.websocket;
 
+import com.example.websocket_demo.websocket.interceptor.SipHandshakeInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
@@ -13,7 +14,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(sipWebSocketHandler(), "/api/sip")
+        registry.addHandler(sipWebSocketHandler(), "/ws")
                 .addInterceptors(new SipHandshakeInterceptor())
                 .setAllowedOrigins("*");
     }

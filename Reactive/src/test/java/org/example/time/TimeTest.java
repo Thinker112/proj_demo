@@ -3,7 +3,9 @@ package org.example.time;
 import org.junit.Test;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -20,5 +22,15 @@ public class TimeTest {
         System.out.println("dayOfWeek1 = " + b);
         // 打印星期的全名
         System.out.println(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()));
+    }
+
+    @Test
+    public void parse(){
+        String date = "2020-01-01T10:10:10";
+        LocalDateTime localDateTime = LocalDateTime.parse(date);
+        LocalDateTime now = LocalDateTime.now();
+        long seconds = Duration.between(localDateTime, now).toHours();
+        System.out.println("hours = " + seconds);
+        System.out.println("localDateTime = " + localDateTime);
     }
 }
