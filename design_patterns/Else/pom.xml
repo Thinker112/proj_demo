@@ -8,7 +8,7 @@
     </parent>
     <artifactId>Else</artifactId>
     <name>Archetype - Else</name>
-    <url>http://maven.apache.org</url>
+    <url>https://maven.apache.org</url>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

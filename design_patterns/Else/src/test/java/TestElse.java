@@ -61,31 +61,19 @@ public class TestElse {
         System.out.println("collect = " + collect);
     }
 
+    @Test
+    public void testMap(){
+        User tom = new User(1L, "tom");
+        User jack = new User(2L, "jack");
+        System.out.println("jack.hashCode() = " + jack.hashCode());
+        System.out.println("tom = " + tom.hashCode());
+
+        HashMap<User, String> userStringHashMap = new HashMap<>();
+        userStringHashMap.put(tom, "tom");
+        userStringHashMap.put(jack, "jack");
+        System.out.println("userStringHashMap = " + userStringHashMap);
+    }
+
 
 }
 
-class User {
-    public User(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    private Long id;
-    private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
