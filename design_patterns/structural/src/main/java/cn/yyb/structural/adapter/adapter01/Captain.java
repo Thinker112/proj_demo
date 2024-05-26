@@ -1,4 +1,4 @@
-package cn.yyb.structural.adapter.Adapter01;
+package cn.yyb.structural.adapter.adapter01;
 
 /**
  * 船长需要有一个RowingBoat接口的实现，这样就可以移动

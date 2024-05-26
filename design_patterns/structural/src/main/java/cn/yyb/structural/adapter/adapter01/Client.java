@@ -1,4 +1,4 @@
-package cn.yyb.structural.adapter.Adapter01;
+package cn.yyb.structural.adapter.adapter01;
 
 public class Client {
     public static void main(String[] args) {

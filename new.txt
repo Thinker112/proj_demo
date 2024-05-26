@@ -1,0 +1,6 @@
+#written by FileProperties
+#Sun May 26 15:04:04 HKT 2024
+a=1
+b=2
+c=3
+d=4
