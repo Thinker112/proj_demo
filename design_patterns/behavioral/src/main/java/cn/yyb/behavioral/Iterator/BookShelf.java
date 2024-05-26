@@ -1,25 +1,27 @@
 package cn.yyb.behavioral.Iterator;
 
+import java.util.ArrayList;
+
 /**
  * @author yueyubo <br>
  * @date 2024-05-26 12:23
  */
 public class BookShelf implements Aggregate{
 
-    private final Book[] books;
+    private final ArrayList<Book> books;
 
     private int last;
 
-    public BookShelf(int maxSize) {
-        this.books = new Book[maxSize];
+    public BookShelf() {
+        this.books = new ArrayList<Book>();
     }
 
     public Book getBookAt(int index){
-        return books[index];
+        return books.get(index);
     }
 
     public void appendBook(Book book){
-        this.books[last] = book;
+        books.add(book);
         last++;
     }
 
