@@ -1,8 +1,6 @@
 package cn.yyb.structural.adapter.adapter03;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.util.Date;
 import java.util.Properties;
 
 /**
