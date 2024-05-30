@@ -4,6 +4,7 @@ import com.example.demo.annotation.Log;
 import com.example.demo.bean.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +30,10 @@ public class DemoController {
         person.setUserName("tom");
         log.info(person.toString() + arg);
         return person;
+    }
+
+    @GetMapping("/response/entity")
+    public ResponseEntity<?> responseEntity() {
+        return ResponseEntity.ok("hello world");
     }
 }
