@@ -3,7 +3,6 @@ package io.netty.example.bio;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.SocketHandler;
 
 /**
  * @author yueyubo <br>
@@ -32,10 +31,12 @@ public class SocketServer {
             byte[] bytes = new byte[1024];
             // 阻塞方法
             int len = clientSocket.getInputStream().read(bytes);
-            System.out.println("read完毕");
-            System.out.println(new String(bytes,0, len));
 
-            clientSocket.getOutputStream().write("hello".getBytes());
+            System.out.println("read完毕");
+            System.out.println(new String(bytes, 0, len));
+
+            clientSocket.getOutputStream().write("server say: hello".getBytes());
+
             System.out.println("end");
         } catch (IOException e) {
             e.printStackTrace();
