@@ -46,7 +46,7 @@ public class DemoController {
     }
 
 
-    private static final String IMAGE_PATH = "D://img01.jpg"; // 修改为实际的图片路径
+    private static final String IMAGE_PATH = "D://img01.jpg"; // 图片路径
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> getImage() throws IOException {
