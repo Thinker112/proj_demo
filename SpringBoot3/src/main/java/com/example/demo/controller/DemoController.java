@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.annotation.Log;
 import com.example.demo.bean.Person;
+import com.example.demo.bean.TestEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.core.io.FileSystemResource;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -65,4 +68,10 @@ public class DemoController {
 
         return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/enum")
+    public void enumTest(@RequestBody TestEnum testEnum) {
+        log.info(testEnum.toString());
+    }
+
 }
