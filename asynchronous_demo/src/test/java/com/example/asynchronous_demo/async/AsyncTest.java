@@ -70,7 +70,7 @@ public class AsyncTest {
         System.out.println(result);
     }
 
-    void test02(){
+//    void test02(){
 //        CompletableFuture.supplyAsync(Integer::parseInt) // 输入: "ILLEGAL"
 //                .thenApply(r -> r * 2 * Math.PI)
 //                .thenApply(s -> "apply>> " + s)
@@ -81,5 +81,5 @@ public class AsyncTest {
 //                        return "Error handling: " + ex.getMessage();
 //                    }
 //                });
-    }
+//    }
 }
