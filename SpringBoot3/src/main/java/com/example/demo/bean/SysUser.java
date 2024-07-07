@@ -1,52 +1,25 @@
 package com.example.demo.bean;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.querydsl.core.annotations.QueryEntity;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name = "sys_user")
+@QueryEntity
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysUser {
 
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "user_id")
+    private Long userId;
 
-    private Long deptId;
-
+//    @Column(name = "user_name")
     private String userName;
-
-    private String nickName;
-
-    private String userType;
-
-    private String email;
-
-    private String phonenumber;
-
-    private Character sex;
-
-    private String avatar;
-
-    private String password;
-
-    private Character status;
-
-    private Character delFlag;
-
-    private String loginIp;
-
-    private LocalDateTime loginDate;
-
-    private String createBy;
-
-    private LocalDateTime createTime;
-
-    private String updateBy;
-
-    private LocalDateTime updateTime;
-
-    private String remark;
-
 }

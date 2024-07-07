@@ -1,6 +1,13 @@
 server:
   port: 8081
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   application:
     name: springboot3-demo
   datasource:
@@ -37,6 +44,8 @@ spring:
     publisher-returns: true
     template:
       mandatory: true
+  main:
+    allow-circular-references: true
 ---
 #logging:
 #  level:

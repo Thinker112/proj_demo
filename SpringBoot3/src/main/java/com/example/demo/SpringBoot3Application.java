@@ -1,17 +1,28 @@
 package com.example.demo;
 
+import io.github.openfeign.querydsl.jpa.spring.repository.config.EnableQuerydslRepositories;
+import io.github.openfeign.querydsl.jpa.spring.repository.support.QuerydslJpaRepositoryFactoryBean;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
 @EnableScheduling
 @EnableAspectJAutoProxy
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@EnableQuerydslRepositories
+@SpringBootApplication
+@Configuration
+@EnableJpaRepositories(
+        basePackages = "com.example.demo.repository",
+        repositoryFactoryBeanClass = QuerydslJpaRepositoryFactoryBean.class
+)
+@EnableTransactionManagement
 public class SpringBoot3Application {
 
     public static void main(String[] args) {

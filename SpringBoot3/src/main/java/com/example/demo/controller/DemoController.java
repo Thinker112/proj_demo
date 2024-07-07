@@ -2,7 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.annotation.Log;
 import com.example.demo.bean.Person;
+import com.example.demo.bean.SysUser;
 import com.example.demo.bean.TestEnum;
+import com.example.demo.repository.SysUserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.core.io.FileSystemResource;
@@ -21,10 +24,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.UUID;
 
-@RestController
 @Slf4j
+@RequiredArgsConstructor
+@RestController
 public class DemoController {
 
+
+    private final SysUserRepository sysUserRepository;
 
     /**
      * 内容协商 根据客户端需要的类型来响应不同的数据格式 响应json 或 xml数据<br>
@@ -74,4 +80,11 @@ public class DemoController {
         log.info(testEnum.toString());
     }
 
+    @GetMapping("/querydsl")
+    public void querydsl() {
+        SysUser admin = sysUserRepository.findByUsername("admin");
+        System.out.println("admin = " + admin);
+    }
+
 }
+
