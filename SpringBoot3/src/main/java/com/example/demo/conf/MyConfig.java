@@ -2,7 +2,6 @@ package com.example.demo.conf;
 
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -17,7 +16,6 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 @SpringBootConfiguration
 @RequiredArgsConstructor
@@ -34,9 +32,7 @@ public class MyConfig {
     }
 
     private final DataSource dataSource;
-
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
