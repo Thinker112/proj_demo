@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -235,13 +236,14 @@ public class FutureDemo {
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
 // int r = 1 / 0;
             return "result1";
-        }).thenApply(result -> {
+        })
+        .thenApply(result -> {
             String str = null;
             int len = str.length();
             return result + " result2";
-        }).thenApply(result -> {
-            return result + " result3";
-        }).exceptionally(ex -> {
+        })
+        .thenApply(result -> result + " result3")
+        .exceptionally(ex -> {
             System.out.println("出现异常：" + ex.getMessage());
             return "UnKnown";
         });
@@ -266,7 +268,70 @@ public class FutureDemo {
         String ret = future.get();
         CommonUtils.printTheadLog("ret = " + ret);
         CommonUtils.printTheadLog("main end");
+    }
 
+    /**
+     * 把两个异步任务做比较，异步任务先到结果的，就对先到的结果进行下一步操作。
+     */
+    @Test
+    @SneakyThrows
+    public void applyToEitherTest(){
+        // 异步任务1
+        CompletableFuture<Integer> future1 = CompletableFuture.supplyAsync(() ->
+        {
+            int x = new Random().nextInt(3);
+            CommonUtils.sleepSecond(x);
+            CommonUtils.printTheadLog("任务1耗时" + x + "秒");
+            return x;
+        });
+        // 异步任务2
+        CompletableFuture<Integer> future2 = CompletableFuture.supplyAsync(() ->
+        {
+            int y = new Random().nextInt(3);
+            CommonUtils.sleepSecond(y);
+            CommonUtils.printTheadLog("任务2耗时" + y + "秒");
+            return y;
+        });
+
+        // 哪些异步任务的结果先到达，就使用哪个异步任务的结果
+        CompletableFuture<Integer> future = future1.applyToEither(future2,
+                result -> {
+                    CommonUtils.printTheadLog("最先到达的结果：" + result);
+                    return result;
+                });
+        CommonUtils.sleepSecond(4);
+        Integer ret = future.get();
+        CommonUtils.printTheadLog("ret = " + ret);
+    }
+
+    /**
+     * acceptEither() 把两个异步任务做比较，异步任务先到结果的，就对先到的结果进行下一步操作(消费使用)。
+     */
+    @Test
+    @SneakyThrows
+    public void acceptEither(){
+        // 异步任务交互 acceptEither
+        // 异步任务1
+        CompletableFuture<Integer> future1 = CompletableFuture.supplyAsync(() ->
+        {
+            int x = new Random().nextInt(3);
+            CommonUtils.sleepSecond(x);
+            CommonUtils.printTheadLog("任务1耗时" + x + "秒");
+            return x;
+        });
+        // 异步任务2
+        CompletableFuture<Integer> future2 = CompletableFuture.supplyAsync(() ->
+        {
+            int y = new Random().nextInt(3);
+            CommonUtils.sleepSecond(y);
+            CommonUtils.printTheadLog("任务2耗时" + y + "秒");
+            return y;
+        });
+        // 哪个异步任务先完成，就使用异步任务的结果
+        future1.acceptEither(future2, result -> {
+            CommonUtils.printTheadLog("最先到达的结果：" + result);
+        });
+        CommonUtils.sleepSecond(4);
     }
 
     public static CompletableFuture<String> readFileFuture(String fileName) {
