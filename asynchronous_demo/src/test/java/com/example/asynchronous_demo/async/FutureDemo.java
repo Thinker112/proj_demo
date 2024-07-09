@@ -4,7 +4,9 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * Future的缺陷:
@@ -18,6 +20,7 @@ import java.util.concurrent.*;
  * 某个函数，Future很难独立完成这一需要。<br>
  * 4. 没有异常处理。 Future提供的方法中没有专门的API应对异常处理，还需要开发者自己手动异常处
  * 理。<br>
+ *
  * @author yueyubo
  * @date 2024-07-03
  */
@@ -78,14 +81,13 @@ public class FutureDemo {
         System.out.println("Arrays.toString(filterWords) = " +
                 Arrays.toString(sensitiveStr));
         CommonUtils.printTheadLog("main end");
-
     }
 
     @Test
     @SneakyThrows
     public void convertSensitiveWordsTest() {
         CompletableFuture.supplyAsync(() -> CommonUtils.readFile(path + "filter_words.txt"))
-               .thenApply(sensitiveStr -> {
+                .thenApply(sensitiveStr -> {
                     CommonUtils.printTheadLog("sensitiveStr = " + sensitiveStr);
                     return sensitiveStr.split(",");
                 })
@@ -131,5 +133,149 @@ public class FutureDemo {
         executor.shutdown();
         CommonUtils.printTheadLog("main end");
     }
+
+    /**
+     * 编排有依赖关系的异步任务<br>
+     * 结合上一步异步任务的结果得到下一个新的异步任务中，结果由这个新的异步任务返回
+     */
+    @Test
+    @SneakyThrows
+    public void thenComposeTest() {
+        readFileFuture(path + "filter_words.txt")
+                .thenCompose(FutureDemo::splitFuture)
+                .thenAccept(words -> System.out.println("words = " + Arrays.toString(words)));
+    }
+
+    /**
+     * 编排非依赖关系的异步任务
+     */
+    @Test
+    @SneakyThrows
+    public void thenCombineTest() {
+        // 需求：替换新闻稿（ news.txt )中敏感词汇，把敏感词汇替换成*，敏感词存储在
+        // step 1: 读取filter_words.txt文件内容，并解析成敏感数组
+        CompletableFuture<String[]> future1 = CompletableFuture.supplyAsync(() -> {
+            CommonUtils.printTheadLog("读取filter_words文件");
+            String filterWordsContent =
+                    CommonUtils.readFile(path + "filter_words.txt");
+            return filterWordsContent.split(",");
+        });
+        // step 2: 读取news.txt文件内容
+        CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
+            CommonUtils.printTheadLog("读取news文件");
+            return CommonUtils.readFile(path + "news.txt");
+        });
+        // step 2: 替换操作
+        CompletableFuture<String> combineFuture = future1.thenCombine(future2,
+                (filterWords, newsContent) -> {
+                    CommonUtils.printTheadLog("替换操作");
+                    for (String word : filterWords) {
+                        if (newsContent.contains(word)) {
+                            newsContent = newsContent.replace(word, "**");
+                        }
+                    }
+                    return newsContent;
+                });
+        CommonUtils.printTheadLog("main continue");
+        String news = combineFuture.get();
+        CommonUtils.printTheadLog("news = " + news);
+        CommonUtils.printTheadLog("main end");
+    }
+
+    /**
+     * 合并多个异步任务
+     * 需求： 统计news1.txt,news2.txt,news3.txt文件中包含CompletableFuture关键字
+     * 的文件的个数
+     */
+    @Test
+    @SneakyThrows
+    public void allOfTest() {
+        // step 1: 创建List集合存储文件名
+        List<String> fileList = Arrays.asList(path + "news.txt", path + "news1.txt", path + "news2.txt");
+
+        // step 2: 根据文件名调用readFileFuture创建多个CompletableFuture,并存入List集合中
+        List<CompletableFuture<String>> readFileFutureList =
+                fileList.stream().map(FutureDemo::readFileFuture).collect(Collectors.toList());
+
+        Long count = CompletableFuture.allOf(readFileFutureList.toArray(new CompletableFuture[readFileFutureList.size()]))
+                .thenApply(result -> readFileFutureList.stream()
+                        .map(CompletableFuture::join)
+                        .filter(content -> content.contains("CompletableFuture"))
+                        .count())
+                .join();
+
+        System.out.println("count = " + count);
+    }
+
+    @Test
+    @SneakyThrows
+    public void anyOfTest() {
+        CompletableFuture<String> future1 =CompletableFuture.supplyAsync(()->{
+            CommonUtils.sleepSecond(2);
+            return "Future1的结果";
+        });
+        CompletableFuture<String> future2 =CompletableFuture.supplyAsync(()->{
+            CommonUtils.sleepSecond(1);
+            return "Future2的结果";
+        });
+        CompletableFuture<String> future3 =CompletableFuture.supplyAsync(()->{
+            CommonUtils.sleepSecond(3);
+            return "Future3的结果";
+        });
+        CompletableFuture<Object> anyOfFuture = CompletableFuture.anyOf(future1,
+                future2, future3);
+
+        Object ret = anyOfFuture.get();
+        System.out.println("ret = " + ret);
+    }
+
+    @Test
+    @SneakyThrows
+    public void exceptionallyTest(){
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+// int r = 1 / 0;
+            return "result1";
+        }).thenApply(result -> {
+            String str = null;
+            int len = str.length();
+            return result + " result2";
+        }).thenApply(result -> {
+            return result + " result3";
+        }).exceptionally(ex -> {
+            System.out.println("出现异常：" + ex.getMessage());
+            return "UnKnown";
+        });
+    }
+
+    @Test
+    @SneakyThrows
+    public void handleTest(){
+        CommonUtils.printTheadLog("main start");
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+//            int r = 1 / 0;
+            return "result1";
+        }).handle((result, ex)->{
+            CommonUtils.printTheadLog("上一步异常的恢复");
+            if(ex != null){
+                CommonUtils.printTheadLog("出现异常：" + ex.getMessage());
+                return "UnKnown";
+            }
+            return result;
+        });
+        CommonUtils.printTheadLog("main continue");
+        String ret = future.get();
+        CommonUtils.printTheadLog("ret = " + ret);
+        CommonUtils.printTheadLog("main end");
+
+    }
+
+    public static CompletableFuture<String> readFileFuture(String fileName) {
+        return CompletableFuture.supplyAsync(() -> CommonUtils.readFile(fileName));
+    }
+
+    public static CompletableFuture<String[]> splitFuture(String content) {
+        return CompletableFuture.supplyAsync(() -> content.split(","));
+    }
+
 
 }
