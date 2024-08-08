@@ -38,20 +38,14 @@ public class SendTest {
         log.info("send message -> {}", messages);
     }*/
 
-//    @Scheduled(initialDelay = 3 * 1000, fixedDelay = 8 * 1000)
+    @Scheduled(initialDelay = 3 * 1000, fixedDelay = 3 * 1000)
     public void send(){
         i++;
         String messages = "hello: " + i;
-        CorrelationData correlationData = new CorrelationData();
+//        CorrelationData correlationData = new CorrelationData();
 
-        rabbitTemplate.send("helloWorldQueue", new Message(messages.getBytes()), correlationData);
-        correlationData.getFuture().whenComplete((confirm, error) -> {
-            if (!confirm.isAck()){
-                log.error("error: {}", error.getCause().toString());
-            }
+        rabbitTemplate.send("test_monitor_platform", "alarm_linkage_routingKey", new Message(messages.getBytes()));
 
-            log.info("send success!!!");
-        });
 //        try {
 //            CorrelationData.Confirm confirm = correlationData.getFuture().get();
 //            if (!confirm.isAck()){

@@ -26,4 +26,13 @@ public class AnnotationDriven {
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
 
+    @SneakyThrows
+    @RabbitListener(queues = "helloWorld2Queue")
+    public void receiveMessageByAnnotation2(String msg, Message message, Channel channel){
+
+        log.info("msg2 detected -> [{}]", msg);
+
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+    }
+
 }
