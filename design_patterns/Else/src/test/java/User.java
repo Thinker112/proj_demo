@@ -10,8 +10,21 @@ class User {
         this.name = name;
     }
 
+    public User(String name) {
+        this.name = name;
+    }
+
     private Long id;
     private String name;
+    private int num;
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
 
     public Long getId() {
         return id;
@@ -40,5 +53,14 @@ class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", num=" + num +
+                '}';
     }
 }

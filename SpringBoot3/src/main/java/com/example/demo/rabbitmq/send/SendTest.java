@@ -38,7 +38,7 @@ public class SendTest {
         log.info("send message -> {}", messages);
     }*/
 
-    @Scheduled(initialDelay = 3 * 1000, fixedDelay = 3 * 1000)
+//    @Scheduled(initialDelay = 3 * 1000, fixedDelay = 3 * 1000)
     public void send(){
         i++;
         String messages = "hello: " + i;

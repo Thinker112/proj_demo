@@ -1,0 +1,20 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: testService
+xxl:
+  job:
+    enable: true
+    admin:
+      addresses: http://localhost:8084/
+    accessToken:
+    executor:
+      appname: testService
+      address:
+      ip:
+      port: 9911
+      logpath: logs/xxl-job/jobhandler
+      logretentiondays: 30
+
+

@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import java.io.File;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -74,6 +75,23 @@ public class TestElse {
         System.out.println("userStringHashMap = " + userStringHashMap);
     }
 
+    @Test
+    public void testFile(){
+        File file = new File("D:\\jwm.tar");
+        String path = file.getPath();
+        System.out.println("path = " + path);
 
+    }
+
+    @Test
+    public void testNum(){
+        try {
+            User tom = new User("tom");
+            System.out.println(tom.toString());
+        } catch (RuntimeException 李依鹏) {
+            System.out.println("出现异常，异常信息: "+ 李依鹏.getMessage());
+            throw new RuntimeException(李依鹏);
+        }
+    }
 }
 

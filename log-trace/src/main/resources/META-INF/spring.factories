@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.base.components.log.trace.TraceAutoConfigration
+
+org.springframework.context.ApplicationListener=\
+com.base.components.log.trace.listener.ApplicationStartingEventListener
