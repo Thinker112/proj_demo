@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>asynchronous_demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>asynchronous_demo</name>
+    <artifactId>async-demo</artifactId>
+    <version>0.0.1</version>
+    <name>async</name>
     <description>asynchronous_demo</description>
 
     <dependencies>

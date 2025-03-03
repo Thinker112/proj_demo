@@ -1,15 +1,11 @@
 package com.example.asynchronous_demo.tcpdump;
 
-/**
- * @author yueyubo
- * @date 2025-02-28
- */
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -17,19 +13,20 @@ import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
+@Slf4j
 @RestController
+@RequestMapping("/capture")
 public class CaptureController {
 
-    // 任务缓存（线程安全）
+    // 任务缓存
     private final Map<String, CaptureTask> taskCache = new ConcurrentHashMap<>();
 
     // 调度线程池（用于执行超时回调）
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
-    // 启动抓包接口（带超时自动终止）
-    @PostMapping("/capture/start")
-    public ResponseEntity<String> startCapture(
-            @RequestParam(defaultValue = "30") int timeoutSeconds) throws IOException {
+    // 启动抓包接口
+    @PostMapping("/start")
+    public ResponseEntity<String> startCapture(@RequestParam(defaultValue = "60") int timeoutSeconds) throws IOException {
 
         // 参数校验
         if (timeoutSeconds < 10 || timeoutSeconds > 3600) {
@@ -37,25 +34,30 @@ public class CaptureController {
         }
 
         String taskId = UUID.randomUUID().toString();
+        log.info("[capture]-taskId: {}, start", taskId);
         Path outputPath = Paths.get(System.getProperty("java.io.tmpdir"), "capture_" + taskId + ".pcap");
 
         // 启动抓包进程
-        Process process = new ProcessBuilder(
-                "sudo", "tcpdump", "-w", outputPath.toString()
-        ).start();
+        ProcessBuilder processBuilder = new ProcessBuilder("sudo", "tcpdump",
+                "-U", // 启用 packet-buffered 模式
+                "-w", outputPath.toString());
+        Process process = processBuilder.start();
+        // 打印完整命令
+        String command = String.join(" ", processBuilder.command());
+        log.info("[capture]-taskId: {}, command: {}", taskId, command);
 
         // 定义超时回调函数
         Consumer<String> timeoutCallback = taskIdParam -> {
             CaptureTask task = taskCache.get(taskIdParam);
             if (task != null && task.getProcess().isAlive()) {
-                System.out.println("任务超时自动终止: " + taskIdParam);
+                log.info("[capture]-taskId: {}, 任务超时自动终止", taskIdParam);
                 task.getProcess().destroy();
-                cleanupTask(taskIdParam, task.getOutputPath());
+                taskCache.remove(taskId);
             }
         };
 
         // 调度超时检查
-        ScheduledFuture<?> scheduledFuture = scheduler.schedule(
+        ScheduledFuture<?> timeoutFuture = scheduler.schedule(
                 () -> timeoutCallback.accept(taskId),
                 timeoutSeconds,
                 TimeUnit.SECONDS
@@ -68,23 +70,24 @@ public class CaptureController {
 //        }, scheduler);
 
         // 保存任务信息
-        taskCache.put(taskId, new CaptureTask(process, outputPath, scheduledFuture));
+        taskCache.put(taskId, new CaptureTask(process, outputPath, timeoutFuture));
 
         return ResponseEntity.ok(taskId);
     }
 
     // 停止抓包接口
-    @GetMapping("/capture/stop")
-    public ResponseEntity<Resource> stopCapture(@RequestParam String taskId)
-            throws IOException, InterruptedException {
+    @GetMapping("/stop")
+    public ResponseEntity<Resource> stopCapture(@RequestParam String taskId) throws InterruptedException {
+        log.info("[capture]-taskId: {}, stop", taskId);
 
         CaptureTask task = taskCache.get(taskId);
         if (task == null) {
+            log.info("[capture]-taskId: {}, not found", taskId);
             return ResponseEntity.notFound().build();
         }
 
         // 取消超时回调
-        task.getScheduledFuture().cancel(true);
+        task.timeoutFuture().cancel(true);
 
         // 终止进程
         Process process = task.getProcess();
@@ -95,57 +98,28 @@ public class CaptureController {
 
         // 构建可下载资源
         File file = task.getOutputPath().toFile();
-        Resource resource = createAutoDeleteResource(file, taskId);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + file.getName() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
-    }
-
-    // 创建自动删除的Resource（带缓存清理）
-    private Resource createAutoDeleteResource(File file, String taskId) {
-        return new FileSystemResource(file) {
-            @Override
-            public InputStream getInputStream() throws IOException {
-                return new FileInputStream(file) {
-                    @Override
-                    public void close() throws IOException {
-                        super.close();
-                        cleanupTask(taskId, file.toPath());
-                    }
-                };
-            }
-        };
-    }
-
-    // 清理任务资源
-    private void cleanupTask(String taskId, Path outputPath) {
-        try {
-            Files.deleteIfExists(outputPath);
-        } catch (IOException e) {
-            System.err.println("文件删除失败: " + outputPath);
-        }
-        taskCache.remove(taskId);
-        System.out.println("清理任务: " + taskId);
+                .body(new FileSystemResource(task.getOutputPath()));
     }
 
     // 内部任务封装类
     private static class CaptureTask {
         private final Process process;
         private final Path outputPath;
-        private final ScheduledFuture<?> scheduledFuture;
+        private final ScheduledFuture<?> timeoutFuture;
 
-        public CaptureTask(Process process, Path outputPath, ScheduledFuture<?> scheduledFuture) {
+        public CaptureTask(Process process, Path outputPath, ScheduledFuture<?> timeoutFuture) {
             this.process = process;
             this.outputPath = outputPath;
-            this.scheduledFuture = scheduledFuture;
+            this.timeoutFuture = timeoutFuture;
         }
 
-        // Getters
         public Process getProcess() { return process; }
         public Path getOutputPath() { return outputPath; }
-        public ScheduledFuture<?> getScheduledFuture() { return scheduledFuture; }
+        public ScheduledFuture<?> timeoutFuture() { return timeoutFuture; }
     }
 }
