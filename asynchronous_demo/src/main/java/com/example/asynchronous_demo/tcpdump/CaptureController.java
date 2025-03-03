@@ -3,14 +3,20 @@ package com.example.asynchronous_demo.tcpdump;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.UUID;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
@@ -19,6 +25,8 @@ import java.util.function.Consumer;
 @RequestMapping("/capture")
 public class CaptureController {
 
+    private static final String FILE_DIRECTORY = "/tmp/tcpdump"; // 文件存储目录
+
     // 任务缓存
     private final Map<String, CaptureTask> taskCache = new ConcurrentHashMap<>();
 
@@ -26,8 +34,9 @@ public class CaptureController {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
     // 启动抓包接口
-    @PostMapping("/start")
-    public ResponseEntity<String> startCapture(@RequestParam(defaultValue = "60") int timeoutSeconds) throws IOException {
+    @GetMapping("/start")
+    public ResponseEntity<String> startCapture(@RequestParam(defaultValue = "60") int timeoutSeconds,
+                                               @RequestParam(value = "cmd", required = false) String cmd) throws IOException {
 
         // 参数校验
         if (timeoutSeconds < 10 || timeoutSeconds > 360) {
@@ -37,16 +46,21 @@ public class CaptureController {
         String taskId = UUID.randomUUID().toString();
         log.info("[capture]-taskId: {}, start", taskId);
         // 创建抓包文件路径
-        Path outputDir = Paths.get("/tmp/tcpdump");
+        Path outputDir = Paths.get(FILE_DIRECTORY);
         if (!Files.exists(outputDir)) {
             Files.createDirectories(outputDir); // 确保目录存在
         }
         Path outputPath = outputDir.resolve("capture_" + taskId + ".pcap");
-
+        ProcessBuilder processBuilder;
         // 启动抓包进程
-        ProcessBuilder processBuilder = new ProcessBuilder("tcpdump",
-                "-U", // 启用 packet-buffered 模式
-                "-w", outputPath.toString());
+        if (StringUtils.hasText(cmd)) {
+            processBuilder = new ProcessBuilder(cmd, outputPath.toString());
+        }else {
+            processBuilder = new ProcessBuilder("tcpdump",
+                    "-U", // 启用 packet-buffered 模式
+                    "-w", outputPath.toString());
+        }
+
         Process process = processBuilder.start();
         // 打印完整命令
         String command = String.join(" ", processBuilder.command());
@@ -124,6 +138,60 @@ public class CaptureController {
                         "attachment; filename=\"" + file.getName() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(new FileSystemResource(task.getOutputPath()));
+    }
+
+    @GetMapping("/info")
+        public ResponseEntity<List<Map<String, Object>>> getFileInfo(@RequestParam(value = "date", required = false) String dateStr) {
+        File folder = new File(FILE_DIRECTORY);
+        if (!folder.exists() || !folder.isDirectory()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+
+        List<Map<String, Object>> fileList = new ArrayList<>();
+        File[] files = folder.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                LocalDate fileDateTime = Instant.ofEpochMilli(file.lastModified()).atZone(ZoneId.systemDefault()).toLocalDate();
+                boolean equal;
+                if (StringUtils.hasText(dateStr)) {
+                    LocalDate dateS = LocalDate.parse(dateStr);
+                    equal = fileDateTime.isEqual(dateS);
+                }else {
+                    equal = fileDateTime.isEqual(LocalDate.now());
+                }
+
+                if (file.isFile() && equal) { // 按日期匹配文件名
+                    Map<String, Object> fileInfo = new HashMap<>();
+                    fileInfo.put("fileName", file.getName());
+                    fileInfo.put("size", String.format("%.2f MB", file.length() / (1024.0 * 1024)));
+                    LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault());
+                    fileInfo.put("creationDate", localDateTime.toString());
+                    fileList.add(fileInfo);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(fileList);
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName) {
+        try {
+            Path filePath = Paths.get(FILE_DIRECTORY).resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     // 内部任务封装类
