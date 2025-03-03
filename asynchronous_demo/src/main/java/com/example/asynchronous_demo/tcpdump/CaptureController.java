@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -29,16 +30,21 @@ public class CaptureController {
     public ResponseEntity<String> startCapture(@RequestParam(defaultValue = "60") int timeoutSeconds) throws IOException {
 
         // 参数校验
-        if (timeoutSeconds < 10 || timeoutSeconds > 3600) {
-            throw new IllegalArgumentException("超时时间必须在10-3600秒之间");
+        if (timeoutSeconds < 10 || timeoutSeconds > 360) {
+            throw new IllegalArgumentException("超时时间必须在10-360秒之间");
         }
 
         String taskId = UUID.randomUUID().toString();
         log.info("[capture]-taskId: {}, start", taskId);
-        Path outputPath = Paths.get(System.getProperty("java.io.tmpdir"), "capture_" + taskId + ".pcap");
+        // 创建抓包文件路径
+        Path outputDir = Paths.get("/tmp/tcpdump");
+        if (!Files.exists(outputDir)) {
+            Files.createDirectories(outputDir); // 确保目录存在
+        }
+        Path outputPath = outputDir.resolve("capture_" + taskId + ".pcap");
 
         // 启动抓包进程
-        ProcessBuilder processBuilder = new ProcessBuilder("sudo", "tcpdump",
+        ProcessBuilder processBuilder = new ProcessBuilder("tcpdump",
                 "-U", // 启用 packet-buffered 模式
                 "-w", outputPath.toString());
         Process process = processBuilder.start();
@@ -52,7 +58,7 @@ public class CaptureController {
             if (task != null && task.getProcess().isAlive()) {
                 log.info("[capture]-taskId: {}, 任务超时自动终止", taskIdParam);
                 task.getProcess().destroy();
-                taskCache.remove(taskId);
+                taskCache.remove(taskIdParam);
             }
         };
 
@@ -63,11 +69,18 @@ public class CaptureController {
                 TimeUnit.SECONDS
         );
 
-//        CompletableFuture.runAsync(() -> {
-//            while (process.isAlive()) {
-//                // 循环监控进程,监控逻辑
-//            }
-//        }, scheduler);
+        // 读取errorStream 防止缓冲区满，导致进程挂起
+        CompletableFuture.runAsync(() -> {
+            try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(process.getErrorStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    log.info("[tcpdump],{}", line);
+                }
+            } catch (IOException e) {
+                log.error("[tcpdump],{}", e.getMessage());
+            }
+        }, scheduler);
 
         // 保存任务信息
         taskCache.put(taskId, new CaptureTask(process, outputPath, timeoutFuture));
@@ -92,8 +105,15 @@ public class CaptureController {
         // 终止进程
         Process process = task.getProcess();
         if (process.isAlive()) {
-            process.destroy();
-            process.waitFor(5, TimeUnit.SECONDS);
+            // 1. 尝试终止，使资源正确释放
+            process.destroy(); // 发送 SIGTERM
+            boolean exited = process.waitFor(3, TimeUnit.SECONDS);
+
+            // 2. 超时后强制终止
+            if (!exited) {
+                process.destroyForcibly(); // 发送 SIGKILL
+                log.info("[capture]-taskId: {}, 进程未在超时时间内退出，已强制终止", taskId);
+            }
         }
 
         // 构建可下载资源
